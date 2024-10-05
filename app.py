@@ -1,6 +1,23 @@
 import streamlit as st
-from PIL import Image
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
+# Load the dataset
+@st.cache_data
+def load_data():
+    url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data'
+    column_names = [
+        'age', 'workclass', 'fnlwgt', 'education', 'education-num', 'marital-status',
+        'occupation', 'relationship', 'race', 'sex', 'capital-gain', 'capital-loss',
+        'hours-per-week', 'native-country', 'income'
+    ]
+    data = pd.read_csv(url, names=column_names, na_values=' ?', skipinitialspace=True)
+    data.dropna(inplace=True)
+    data['income'] = data['income'].str.strip()
+    return data
+
+# Set page configuration
 st.set_page_config(page_title="Sheeshable Guys - Data Exploration Report", layout="wide")
 
 st.markdown("""
@@ -51,6 +68,8 @@ st.markdown("""
 st.sidebar.title("🚀 Sheeshable Guys - Data Exploration Report")
 page = st.sidebar.radio("Navigate to:", ["Introduction", "Visualizations", "Conclusion"])
 
+data = load_data()
+
 if page == "Introduction":
     st.title("💼 Data Exploration Report: Adult Income Dataset")
     st.header("📊 Introduction")
@@ -86,23 +105,75 @@ if page == "Introduction":
 
 elif page == "Visualizations":
     st.title("📊 Visualizations of Key Insights")
-    st.write("### 📈 Distribution Analysis")
+    st.write("### 📈 Histograms and Boxplots")
 
-    st.write("#### Key Statistics at a Glance")
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Average Age", "38.5 years")
-    col2.metric("Hours per Week", "40.44 hours")
-    col3.metric("Education Level", "10 years")
-    col4.metric("Income Proportion", "24% > $50K")
+    # Age Distribution
+    st.subheader("1. Age Distribution")
+    st.write("The majority of individuals are between 20 and 50 years old, peaking around 30-40. The red dashed line indicates a mean age of 38.58.")
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))  # Side-by-side plots
+    sns.histplot(data['age'], kde=False, color='skyblue', ax=ax1)
+    ax1.axvline(data['age'].mean(), color='red', linestyle='--', label=f'Mean Age: {data["age"].mean():.2f}')
+    ax1.legend()
+    sns.boxplot(x=data['age'], color='skyblue', ax=ax2)
+    ax2.axvline(data['age'].mean(), color='red', linestyle='--', label=f'Mean: {data["age"].mean():.2f}')
+    ax2.legend()
+    st.pyplot(fig)
 
-    st.subheader("1. Histograms of Numeric Features with Mean Annotations")
-    st.image("histograms_image.png", caption="Histograms of Numeric Features with Mean Annotations", use_column_width=True)
+    # Education-Num Distribution
+    st.subheader("2. Education-Num Distribution")
+    st.write("Represents the years of education completed. Most people have around 10 years of education, with secondary spikes at 13-14 years, indicating high school and college-level education. The mean education number is 10.08.")
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
+    sns.histplot(data['education-num'], kde=False, color='lightgreen', ax=ax1)
+    ax1.axvline(data['education-num'].mean(), color='red', linestyle='--', label=f'Mean: {data["education-num"].mean():.2f}')
+    ax1.legend()
+    sns.boxplot(x=data['education-num'], color='lightgreen', ax=ax2)
+    ax2.axvline(data['education-num'].mean(), color='red', linestyle='--', label=f'Mean: {data["education-num"].mean():.2f}')
+    ax2.legend()
+    st.pyplot(fig)
 
-    st.subheader("2. Boxplot of Numeric Features (Excluding Capital-Gain and Capital-Loss)")
-    st.image("boxplot_numeric.png", caption="Boxplot of Numeric Features (Excluding Capital-Gain and Capital-Loss)", use_column_width=True)
+    # Capital-Gain Distribution
+    st.subheader("3. Capital-Gain Distribution")
+    st.write("Most values are zero, indicating that a large proportion of individuals do not have additional capital gains. The mean value is skewed to 1077.65 due to a few high outliers.")
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
+    sns.histplot(data['capital-gain'], kde=False, color='lightcoral', ax=ax1)
+    ax1.axvline(data['capital-gain'].mean(), color='red', linestyle='--', label=f'Mean: {data["capital-gain"].mean():.2f}')
+    ax1.legend()
+    sns.boxplot(x=data['capital-gain'], color='lightcoral', ax=ax2)
+    ax2.axvline(data['capital-gain'].mean(), color='red', linestyle='--', label=f'Mean: {data["capital-gain"].mean():.2f}')
+    ax2.legend()
+    st.pyplot(fig)
 
-    st.subheader("3. Boxplot of Capital-Gain and Capital-Loss")
-    st.image("boxplot_capital.png", caption="Boxplot of Capital-Gain and Capital-Loss", use_column_width=True)
+    # Capital-Loss Distribution
+    st.subheader("4. Capital-Loss Distribution")
+    st.write("Similar to capital gain, the majority of individuals have zero capital loss, with a small number having significant losses. The mean value is 87.30.")
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
+    sns.histplot(data['capital-loss'], kde=False, color='gold', ax=ax1)
+    ax1.axvline(data['capital-loss'].mean(), color='red', linestyle='--', label=f'Mean: {data["capital-loss"].mean():.2f}')
+    ax1.legend()
+    sns.boxplot(x=data['capital-loss'], color='gold', ax=ax2)
+    ax2.axvline(data['capital-loss'].mean(), color='red', linestyle='--', label=f'Mean: {data["capital-loss"].mean():.2f}')
+    ax2.legend()
+    st.pyplot(fig)
+
+    # Hours-per-Week Distribution
+    st.subheader("5. Hours-per-Week Distribution")
+    st.write("Most individuals work a standard 40-hour week, with the distribution centered around this value. The mean value is 40.44, matching the typical full-time schedule.")
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
+    sns.histplot(data['hours-per-week'], kde=False, color='orange', ax=ax1)
+    ax1.axvline(data['hours-per-week'].mean(), color='red', linestyle='--', label=f'Mean: {data["hours-per-week"].mean():.2f}')
+    ax1.legend()
+    sns.boxplot(x=data['hours-per-week'], color='orange', ax=ax2)
+    ax2.axvline(data['hours-per-week'].mean(), color='red', linestyle='--', label=f'Mean: {data["hours-per-week"].mean():.2f}')
+    ax2.legend()
+    st.pyplot(fig)
+
+    # Income Distribution
+    st.subheader("6. Income Distribution")
+    st.write("Binary distribution indicating 76% of individuals earn <=50K and 24% earn >50K. Text annotations show these proportions clearly, without using a mean line since the variable is categorical.")
+    fig, ax = plt.subplots(figsize=(8, 4))
+    sns.countplot(x='income', data=data, palette='muted', ax=ax)
+    ax.set_xticklabels(['<=50K', '>50K'])
+    st.pyplot(fig)
 
 elif page == "Conclusion":
     st.title("🔍 Conclusion and Takeaways")
