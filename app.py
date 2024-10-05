@@ -3,7 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Load the dataset
 @st.cache_data
 def load_data():
     url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data'
@@ -17,7 +16,6 @@ def load_data():
     data['income'] = data['income'].str.strip()
     return data
 
-# Set page configuration
 st.set_page_config(page_title="Sheeshable Guys - Data Exploration Report", layout="wide")
 
 st.markdown("""
@@ -107,7 +105,6 @@ elif page == "Visualizations":
     st.title("📊 Visualizations of Key Insights")
     st.write("### 📈 Histograms and Boxplots")
 
-    # Age Distribution
     st.subheader("1. Age Distribution")
     st.write("The majority of individuals are between 20 and 50 years old, peaking around 30-40. The red dashed line indicates a mean age of 38.58.")
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))  # Side-by-side plots
@@ -119,7 +116,6 @@ elif page == "Visualizations":
     ax2.legend()
     st.pyplot(fig)
 
-    # Education-Num Distribution
     st.subheader("2. Education-Num Distribution")
     st.write("Represents the years of education completed. Most people have around 10 years of education, with secondary spikes at 13-14 years, indicating high school and college-level education. The mean education number is 10.08.")
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
@@ -131,7 +127,6 @@ elif page == "Visualizations":
     ax2.legend()
     st.pyplot(fig)
 
-    # Capital-Gain Distribution
     st.subheader("3. Capital-Gain Distribution")
     st.write("Most values are zero, indicating that a large proportion of individuals do not have additional capital gains. The mean value is skewed to 1077.65 due to a few high outliers.")
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
@@ -143,7 +138,6 @@ elif page == "Visualizations":
     ax2.legend()
     st.pyplot(fig)
 
-    # Capital-Loss Distribution
     st.subheader("4. Capital-Loss Distribution")
     st.write("Similar to capital gain, the majority of individuals have zero capital loss, with a small number having significant losses. The mean value is 87.30.")
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
@@ -155,7 +149,6 @@ elif page == "Visualizations":
     ax2.legend()
     st.pyplot(fig)
 
-    # Hours-per-Week Distribution
     st.subheader("5. Hours-per-Week Distribution")
     st.write("Most individuals work a standard 40-hour week, with the distribution centered around this value. The mean value is 40.44, matching the typical full-time schedule.")
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
@@ -166,8 +159,7 @@ elif page == "Visualizations":
     ax2.axvline(data['hours-per-week'].mean(), color='red', linestyle='--', label=f'Mean: {data["hours-per-week"].mean():.2f}')
     ax2.legend()
     st.pyplot(fig)
-
-    # Income Distribution
+    
     st.subheader("6. Income Distribution")
     st.write("Binary distribution indicating 76% of individuals earn <=50K and 24% earn >50K. Text annotations show these proportions clearly, without using a mean line since the variable is categorical.")
     fig, ax = plt.subplots(figsize=(8, 4))
