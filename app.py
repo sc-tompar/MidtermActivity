@@ -26,11 +26,11 @@ st.markdown("""
         background-color: #f4f7fc;
     }
     h1, h2, h3, h4, h5, h6 {
-        color: white;
+        color: #444444;
         text-align: center;
     }
     p, li {
-        color: #444444;
+        color: white;
         font-size: 18px;
         line-height: 1.6;
     }
