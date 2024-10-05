@@ -26,7 +26,7 @@ st.markdown("""
         background-color: #f4f7fc;
     }
     h1, h2, h3, h4, h5, h6 {
-        color: #333333;
+        color: white;
         text-align: center;
     }
     p, li {
